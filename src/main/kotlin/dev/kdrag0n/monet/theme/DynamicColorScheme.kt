@@ -1,5 +1,6 @@
 package dev.kdrag0n.monet.theme
 
+import android.util.Log
 import dev.kdrag0n.colorkt.Color
 import dev.kdrag0n.colorkt.cam.Zcam
 import dev.kdrag0n.colorkt.cam.Zcam.Companion.toZcam
@@ -21,6 +22,10 @@ class DynamicColorScheme(
         lch.copy(chroma = lch.chroma * chromaFactor)
     }
     private val seedAccent = seedNeutral
+
+    init {
+        Log.i(TAG, "Seed color: ${seedColor.convert<Srgb>().toHex()} => $seedNeutral")
+    }
 
     // Main accent color. Generally, this is close to the seed color.
     override val accent1 = transformSwatch(targets.accent1, seedAccent, targets.accent1)
@@ -51,6 +56,7 @@ class DynamicColorScheme(
             val newLch = transformColor(target, seed, reference)
             val newSrgb = newLch.convert<Srgb>()
 
+            Log.d(TAG, "Transform: [$shade] $target => $newLch => ${newSrgb.toHex()}")
             shade to newSrgb
         }.toMap()
     }
@@ -85,6 +91,8 @@ class DynamicColorScheme(
     }
 
     companion object {
+        private const val TAG = "DynamicColorScheme"
+
         // Hue shift for the tertiary accent color (accent3), in degrees.
         // 60 degrees = shifting by a secondary color
         private const val ACCENT3_HUE_SHIFT_DEGREES = 60.0
