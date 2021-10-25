@@ -24,7 +24,9 @@ class DynamicColorScheme(
     private val seedAccent = seedNeutral
 
     init {
-        Log.i(TAG, "Seed color: ${seedColor.convert<Srgb>().toHex()} => $seedNeutral")
+        if (DEBUG) {
+            Log.d(TAG, "Seed color: ${seedColor.convert<Srgb>().toHex()} => $seedNeutral")
+        }
     }
 
     // Main accent color. Generally, this is close to the seed color.
@@ -56,7 +58,10 @@ class DynamicColorScheme(
             val newLch = transformColor(target, seed, reference)
             val newSrgb = newLch.convert<Srgb>()
 
-            Log.d(TAG, "Transform: [$shade] $target => $newLch => ${newSrgb.toHex()}")
+            if (DEBUG) {
+                Log.d(TAG, "Transform: [$shade] $target => $newLch => ${newSrgb.toHex()}")
+            }
+
             shade to newSrgb
         }.toMap()
     }
@@ -92,6 +97,7 @@ class DynamicColorScheme(
 
     companion object {
         private const val TAG = "DynamicColorScheme"
+        private const val DEBUG = false
 
         // Hue shift for the tertiary accent color (accent3), in degrees.
         // 60 degrees = shifting by a secondary color
